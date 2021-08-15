@@ -1,0 +1,22 @@
+server:
+  port: 8083
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 153010463
+    url: jdbc:mysql://localhost:3306/elevator?useSSL=true&useUnicode=true&characterEncoding=UTF8&serverTimezone=UTC
+
+
+
+
+mybatis:
+  mapper-locations: classpath:mappers/*.xml
+
+logging:
+  level:
+    org:
+      lin:
+        mapper: debug
+
+

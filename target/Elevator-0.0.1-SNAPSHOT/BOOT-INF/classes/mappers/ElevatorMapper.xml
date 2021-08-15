@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.lin.mapper.ElevatorMapper">
+  <select id="getAllElevator" resultType="org.lin.bean.Elevator">
+    select * from elevator.elevator;
+  </select>
+
+  <select id="getElevatorById" resultType="org.lin.bean.Elevator">
+    select * from elevator.elevator where elevatorId = #{elevatorId};
+  </select>
+
+  <select id="getElevatorByName" resultType="org.lin.bean.Elevator">
+    select * from elevator.elevator where elevatorName like '%${elevatorName}%';
+  </select>
+
+  <update id="eidtElevatorById">
+    update elevator.elevator set elevatorName = #{elevator.elevatorName} where elevatorId = #{elevator.elevatorId};
+  </update>
+
+  <delete id="deleteElevatorById">
+    delete from elevator.elevator where elevatorId = #{elevatorId};
+  </delete>
+
+  <insert id="addElevator">
+    insert into elevator.elevator(elevatorName)
+      value(#{elevatorName});
+  </insert>
+</mapper>

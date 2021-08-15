@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.lin.mapper.OrderMapper">
+
+  <select id="getAllOrder" resultType="org.lin.bean.Order">
+    select * from elevator.`order`;
+  </select>
+
+  <select id="getOrderByelevatorId" resultType="org.lin.bean.Order">
+    select * from elevator.`order` where elevatorId = #{elevatorId};
+  </select>
+
+  <select id="getOrderById" resultType="org.lin.bean.Order">
+    select * from elevator.`order` where orderId = #{orderId};
+  </select>
+
+  <select id="getOrderByProblem" resultType="org.lin.bean.Order">
+    select * from elevator.`order` where problem like '%${problem}%';
+  </select>
+
+  <select id="getOrderByResult" resultType="org.lin.bean.Order">
+    select * from elevator.`order` where result = #{result};
+  </select>
+
+  <select id="getOrderByVillage" resultType="org.lin.bean.Order">
+    select * from elevator.`order` where createVillage like '%${createVillage}%';
+  </select>
+
+  <insert id="addOrder">
+    insert into elevator.`order`(elevatorId, createTime, createVillage, problem, result, resultTime)
+      value(#{order.elevatorId},#{order.createTime},#{order.createVillage},#{order.problem},#{order.result},#{order.resultTime});
+  </insert>
+
+  <update id="editOrder">
+    update elevator.`order` set elevatorId = #{order.elevatorId},createTime = #{order.createTime},createVillage = #{order.createVillage},
+    problem = #{order.problem}, result = #{order.result}, resultTime = #{order.resultTime} where orderId = #{order.orderId};
+  </update>
+
+  <delete id="deleteOrder">
+    delete from elevator.`order` where orderId = #{orderId};
+  </delete>
+</mapper>
