@@ -3,7 +3,7 @@
     <el-table :data="elevatorList" stripe style="width: 100%">
       <el-table-column prop="elevatorId" label="电梯编号"> </el-table-column>
       <el-table-column prop="elevatorName" label="电梯名称"> </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" v-if="power">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -19,7 +19,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-button type="primary" @click="addElevator">添加电梯</el-button>
+    <el-button type="primary" @click="addElevator" v-if="power">添加电梯</el-button>
 
     <el-dialog :title="title" :visible.sync="isElevatorAdd">
       <el-form :model="ElevatorForm">
@@ -46,6 +46,7 @@ export default {
       isElevatorAdd: false,
       title: "添加电梯",
       ElevatorForm: {},
+      power: false
     };
   },
   methods: {
@@ -67,7 +68,7 @@ export default {
     },
     cancelElevator() {
       this.isElevatorAdd = false;
-      if(this.title == "编辑电梯") {
+      if (this.title == "编辑电梯") {
         this.title = "添加电梯";
       }
       this.ElevatorForm = {};
@@ -100,6 +101,13 @@ export default {
   },
   created() {
     this.getList();
+
+    this.$axios.get("/user/getPower").then((success) => {
+      if (success.data == "fail") {
+      } else {
+        this.power = true;
+      }
+    });
   },
 };
 </script>

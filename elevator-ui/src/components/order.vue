@@ -11,9 +11,9 @@
       </el-table-column>
       <el-table-column prop="problem" label="问题" width="180">
       </el-table-column>
-      <el-table-column prop="result" label="结果" width="80"> </el-table-column>
+      <el-table-column prop="resultStr" label="结果" width="80"> </el-table-column>
       <el-table-column prop="resultTime" label="处理时间"> </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" v-if="power">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
             >编辑</el-button
@@ -40,7 +40,7 @@
         >
         </el-pagination>
       </div>
-      <el-button type="primary" id="add" @click="isAdd = true"
+      <el-button type="primary" id="add" @click="isAdd = true" v-if="power"
         >添加订单</el-button
       >
     </div>
@@ -117,6 +117,7 @@ export default {
       boxmsg: {
         title: "添加订单",
       },
+      power: false
     };
   },
   methods: {
@@ -124,6 +125,16 @@ export default {
       this.$axios
         .get(`order/getByLimit/${this.currentPage4}/${this.pageSize}`)
         .then((success) => {
+          console.log(success.data);
+          success.data.forEach((value) => {
+            if(value.result == "1") {
+              value.resultStr = "暂未处理";
+            }else if(value.result == "0") {
+              value.resultStr = "成功解决";
+            }else {
+              value.resultStr = "处理异常";
+            }
+          })
           this.orderList = success.data;
         });
     },
@@ -203,6 +214,13 @@ export default {
   created() {
     this.getTotal();
     this.getList();
+    this.$axios.get("/user/getPower").then((success) => {
+      if(success.data == "fail") {
+        
+      }else {
+        this.power = true;
+      }
+    })
   },
 };
 </script>

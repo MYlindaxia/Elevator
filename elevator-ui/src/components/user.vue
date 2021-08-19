@@ -5,8 +5,8 @@
       </el-table-column>
       <el-table-column prop="userName" label="用户名称" width="180">
       </el-table-column>
-      <el-table-column prop="userPower" label="用户权限"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column prop="userPowerStr" label="用户权限"></el-table-column>
+      <el-table-column label="操作" v-if="power">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -23,7 +23,7 @@
       </el-table-column>
     </el-table>
     <div class="footer">
-      <el-button type="primary" @click="addUserShow">添加用户</el-button>
+      <el-button type="primary" @click="addUserShow" v-if="power">添加用户</el-button>
     </div>
     <el-dialog :title="title" :visible.sync="isUserAdd">
       <el-form :model="userForm">
@@ -43,9 +43,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelUser">取 消</el-button>
-        <el-button type="primary" @click="addUser"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="addUser">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -56,20 +54,30 @@ export default {
   data() {
     return {
       userList: [],
-      userForm: {
-
-      },
+      userForm: {},
       isUserAdd: false,
-      title: "编辑用户"
+      title: "编辑用户",
+      power: false
     };
   },
   methods: {
     getUser() {
       this.$axios.get("/user/getAll").then((success) => {
         this.userList = success.data;
+        console.log(success.data);
+
+        success.data.forEach((vlaue) => {
+          if (vlaue.userPower == 0) {
+            vlaue.userPowerStr = "可读可写";
+          } else if (vlaue.userPower == 1) {
+            vlaue.userPowerStr = "只读";
+          } else {
+            vlaue.userPowerStr = "无权限";
+          }
+        });
       });
     },
-    handleUserEdit(a,b) {
+    handleUserEdit(a, b) {
       this.title = "编辑用户";
       this.userForm = b;
       this.isUserAdd = true;
@@ -82,15 +90,15 @@ export default {
     },
     addUser() {
       this.isUserAdd = false;
-      
-      if(this.title === "编辑用户") {
-        this.$axios.put("/user/update",this.userForm).then(success => {
+
+      if (this.title === "编辑用户") {
+        this.$axios.put("/user/update", this.userForm).then((success) => {
           this.getUser();
-      })
-      }else {
-        this.$axios.post("/user/add",this.userForm).then(success => {
+        });
+      } else {
+        this.$axios.post("/user/add", this.userForm).then((success) => {
           this.getUser();
-        })
+        });
       }
     },
     addUserShow() {
@@ -100,10 +108,17 @@ export default {
     cancelUser() {
       this.isUserAdd = false;
       this.userForm = {};
-    }
+    },
   },
   created() {
     this.getUser();
+
+    this.$axios.get("/user/getPower").then((success) => {
+      if (success.data == "fail") {
+      } else {
+        this.power = true;
+      }
+    });
   },
 };
 </script>

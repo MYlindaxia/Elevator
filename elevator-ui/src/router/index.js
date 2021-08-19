@@ -4,7 +4,6 @@ import elementui from "element-ui"
 const main = () => import("../components/main.vue")
 const login = () => import("../components/login.vue")
 const order = () => import("../components/order.vue")
-const test = () => import("../components/test.vue")
 const user = () => import("../components/user.vue")
 const elevator = () => import("../components/elevator.vue")
 
@@ -34,10 +33,6 @@ const routes = [
       }
     ]
   },
-  {
-    path: "/test",
-    component:test
-  }
 ]
 
 const router = new VueRouter({
