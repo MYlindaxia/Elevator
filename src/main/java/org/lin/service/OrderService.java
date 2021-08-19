@@ -18,11 +18,11 @@ public interface OrderService {
 
   List<Order> getOrderByResult(int result);
 
-  int addOrder(Order order);
+  int addOrder(Order order,String token);
 
-  int update(Order order);
+  int update(Order order,String token);
 
-  int delete(int orderId);
+  int delete(int orderId,String token);
 
   List<Order> getOrderByLimit(int page,int size);
 }

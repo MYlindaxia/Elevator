@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @CrossOrigin
@@ -43,23 +44,26 @@ public class ElevatorController {
   }
 
   @RequestMapping("/edit/{id}/{name}")
-  public String edit(@PathVariable("id") int id,@PathVariable("name") String name) throws JsonProcessingException {
+  public String edit(@PathVariable("id") int id, @PathVariable("name") String name, HttpServletRequest request) throws JsonProcessingException {
+    String token = request.getHeader("token");
     Elevator elevator = new Elevator(id, name);
-    int i = elevatorService.eidtElevatorById(elevator);
+    int i = elevatorService.eidtElevatorById(elevator,token);
     String s = mapper.writeValueAsString(i);
     return s;
   }
 
   @RequestMapping("/del/{id}")
-  public String delete(@PathVariable("id") int id) throws JsonProcessingException {
-    int i = elevatorService.deleteElevatorById(id);
+  public String delete(@PathVariable("id") int id, HttpServletRequest request) throws JsonProcessingException {
+    String token = request.getHeader("token");
+    int i = elevatorService.deleteElevatorById(id,token);
     String s = mapper.writeValueAsString(i);
     return s;
   }
 
   @RequestMapping("/add/{name}")
-  public String add(@PathVariable("name") String name) throws JsonProcessingException {
-    int i = elevatorService.addElevator(name);
+  public String add(@PathVariable("name") String name, HttpServletRequest request) throws JsonProcessingException {
+    String token = request.getHeader("token");
+    int i = elevatorService.addElevator(name,token);
     String s = mapper.writeValueAsString(i);
     return s;
   }

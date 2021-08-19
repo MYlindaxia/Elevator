@@ -2,6 +2,7 @@ package org.lin.service;
 
 import org.lin.bean.Order;
 import org.lin.mapper.OrderMapper;
+import org.lin.mapper.TokenMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,8 @@ public class OrderServiceImp implements OrderService{
 
   @Autowired
   private OrderMapper orderMapper;
+  @Autowired
+  private TokenMapper tokenMapper;
 
   @Override
   public List<Order> getAllOrder() {
@@ -44,18 +47,35 @@ public class OrderServiceImp implements OrderService{
   }
 
   @Override
-  public int addOrder(Order order) {
-    return orderMapper.addOrder(order);
+  public int addOrder(Order order,String token) {
+    Integer power = tokenMapper.realGetPowerByToken(token);
+    if(power == 0) {
+      return orderMapper.addOrder(order);
+    }else {
+      return 0;
+    }
   }
 
   @Override
-  public int update(Order order) {
-    return orderMapper.editOrder(order);
+  public int update(Order order,String token) {
+
+    Integer power = tokenMapper.realGetPowerByToken(token);
+    if(power == 0) {
+      return orderMapper.editOrder(order);
+    }else {
+      return 0;
+    }
   }
 
   @Override
-  public int delete(int orderId) {
-    return orderMapper.deleteOrder(orderId);
+  public int delete(int orderId,String token) {
+
+    Integer power = tokenMapper.realGetPowerByToken(token);
+    if(power == 0) {
+      return orderMapper.deleteOrder(orderId);
+    }else {
+      return 0;
+    }
   }
 
   @Override

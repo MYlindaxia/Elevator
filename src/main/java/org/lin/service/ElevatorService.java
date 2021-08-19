@@ -12,9 +12,9 @@ public interface ElevatorService {
 
   public Elevator getElevatorById(int elevatorId);
 
-  public int eidtElevatorById(Elevator elevator);
+  public int eidtElevatorById(Elevator elevator,String token);
 
-  public int deleteElevatorById(int elevatorId);
+  public int deleteElevatorById(int elevatorId,String token);
 
-  public int addElevator(String elevatorName);
+  public int addElevator(String elevatorName,String token);
 }

@@ -2,6 +2,7 @@ package org.lin.service;
 
 import org.lin.bean.Elevator;
 import org.lin.mapper.ElevatorMapper;
+import org.lin.mapper.TokenMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,8 @@ public class ElevatorServiceImp implements ElevatorService{
 
   @Autowired
   private ElevatorMapper elevatorMapper;
+  @Autowired
+  private TokenMapper tokenMapper;
 
   @Override
   public List<Elevator> getAllElevator() {
@@ -29,17 +32,35 @@ public class ElevatorServiceImp implements ElevatorService{
   }
 
   @Override
-  public int eidtElevatorById(Elevator elevator) {
-    return elevatorMapper.eidtElevatorById(elevator);
+  public int eidtElevatorById(Elevator elevator,String token) {
+    Integer power = tokenMapper.realGetPowerByToken(token);
+
+    if(power == 0) {
+      return elevatorMapper.eidtElevatorById(elevator);
+    }else {
+      return 0;
+    }
   }
 
   @Override
-  public int deleteElevatorById(int elevatorId) {
-    return elevatorMapper.deleteElevatorById(elevatorId);
+  public int deleteElevatorById(int elevatorId,String token) {
+    Integer power = tokenMapper.realGetPowerByToken(token);
+
+    if(power == 0) {
+      return elevatorMapper.deleteElevatorById(elevatorId);
+    }else {
+      return 0;
+    }
   }
 
   @Override
-  public int addElevator(String elevatorName) {
-    return elevatorMapper.addElevator(elevatorName);
+  public int addElevator(String elevatorName,String token) {
+    Integer power = tokenMapper.realGetPowerByToken(token);
+
+    if(power == 0) {
+      return elevatorMapper.addElevator(elevatorName);
+    }else {
+      return 0;
+    }
   }
 }

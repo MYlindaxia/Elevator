@@ -16,4 +16,9 @@
     select userName from elevator.token where  token.token = #{tokenValue};
   </select>
 
+  <select id="realGetPowerByToken" resultType="int">
+    select elevator.user.userPower from elevator.user where userName in
+    (select elevator.token.userName from elevator.token where token.token = #{token})
+  </select>
+
 </mapper>

@@ -10,6 +10,7 @@ import org.lin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +47,9 @@ public class UserController {
   }
 
   @DeleteMapping("/{userId}")
-  public String delete(@PathVariable("userId") int userId) throws JsonProcessingException {
-    int i = userService.deleteUser(userId);
+  public String delete(@PathVariable("userId") int userId,HttpServletRequest request) throws JsonProcessingException {
+    String token = request.getHeader("token");
+    int i = userService.deleteUser(userId,token);
     String s = mapper.writeValueAsString(i);
     return s;
   }
@@ -60,16 +62,32 @@ public class UserController {
   }
 
   @PutMapping(value = "/update",produces = "application/json")
-  public String updateUser(@RequestBody User user) throws JsonProcessingException {
-    int i = userService.editUser(user);
+  public String updateUser(@RequestBody User user,HttpServletRequest request) throws JsonProcessingException {
+    String token = request.getHeader("token");
+    int i = userService.editUser(user,token);
     String s = mapper.writeValueAsString(i);
     return s;
   }
 
   @PostMapping(value = "/add",produces = "application/json")
-  public String add(@RequestBody User user) throws JsonProcessingException {
-    int i = userService.addUser(user);
+  public String add(@RequestBody User user, HttpServletRequest request) throws JsonProcessingException {
+    String token = request.getHeader("token");
+    int i = userService.addUser(user,token);
     String s = mapper.writeValueAsString(i);
     return s;
+  }
+
+  @GetMapping("/getPower")
+  public String getPower(HttpServletRequest request) throws JsonProcessingException {
+    String token = request.getHeader("token");
+    Integer power = tokenMapper.realGetPowerByToken(token);
+
+    if(power ==0) {
+      String ok = mapper.writeValueAsString("ok");
+      return ok;
+    }else {
+      String fail = mapper.writeValueAsString("fail");
+      return fail;
+    }
   }
 }

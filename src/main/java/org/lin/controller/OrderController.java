@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -67,24 +68,27 @@ public class OrderController {
   }
 
   @PostMapping("/add")
-  public String addOrder(@RequestBody Order order) throws ParseException, JsonProcessingException {
+  public String addOrder(@RequestBody Order order, HttpServletRequest request) throws ParseException, JsonProcessingException {
+    String token = request.getHeader("token");
     String createTime = sdf.format(order.getCreateTime());
-    int i = orderService.addOrder(order);
+    int i = orderService.addOrder(order,token);
     String json = mapper.writeValueAsString(i);
 //    return json;
     return "OK";
   }
 
   @DeleteMapping(value = "/delete/{id}")
-  public String deleteOrder(@PathVariable("id") int id) throws JsonProcessingException {
-    int delete = orderService.delete(id);
+  public String deleteOrder(@PathVariable("id") int id,HttpServletRequest request) throws JsonProcessingException {
+    String token = request.getHeader("token");
+    int delete = orderService.delete(id,token);
     String s = mapper.writeValueAsString(delete);
     return s;
   }
 
   @PutMapping("/update")
-  public String updateOrder(@RequestBody Order order) throws ParseException, JsonProcessingException {
-    int i = orderService.update(order);
+  public String updateOrder(@RequestBody Order order,HttpServletRequest request) throws ParseException, JsonProcessingException {
+    String token = request.getHeader("token");
+    int i = orderService.update(order,token);
     String json = mapper.writeValueAsString(i);
     return json;
   }
@@ -95,4 +99,6 @@ public class OrderController {
     String s = mapper.writeValueAsString(orderByLimit);
     return s;
   }
+
+
 }
